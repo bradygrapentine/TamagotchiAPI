@@ -7,8 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TamagotchiAPI.Models;
 
+// Need to build in control stmts to handle cases where hunger or happiness level goes below zero
+// Need to build in control stmts to prevent user from interacting with dead pets
+// Could build in control stmts that kill pet if it's too hungry
+// 
+
 namespace TamagotchiAPI.Controllers
 {
+
     // All of these routes will be at the base URL:     /api/Pets
     // That is what "api/[controller]" means below. It uses the name of the controller
     // in this case PetsController to determine the URL
