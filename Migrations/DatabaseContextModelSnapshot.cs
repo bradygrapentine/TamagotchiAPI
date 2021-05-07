@@ -109,7 +109,7 @@ namespace TamagotchiAPI.Migrations
             modelBuilder.Entity("TamagotchiAPI.Models.Feeding", b =>
                 {
                     b.HasOne("TamagotchiAPI.Models.Pet", "pet")
-                        .WithMany("PetFeedings")
+                        .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -120,7 +120,7 @@ namespace TamagotchiAPI.Migrations
             modelBuilder.Entity("TamagotchiAPI.Models.Playtime", b =>
                 {
                     b.HasOne("TamagotchiAPI.Models.Pet", "pet")
-                        .WithMany("PetPlaytimes")
+                        .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -131,21 +131,12 @@ namespace TamagotchiAPI.Migrations
             modelBuilder.Entity("TamagotchiAPI.Models.Scolding", b =>
                 {
                     b.HasOne("TamagotchiAPI.Models.Pet", "pet")
-                        .WithMany("PetScoldings")
+                        .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("pet");
-                });
-
-            modelBuilder.Entity("TamagotchiAPI.Models.Pet", b =>
-                {
-                    b.Navigation("PetFeedings");
-
-                    b.Navigation("PetPlaytimes");
-
-                    b.Navigation("PetScoldings");
                 });
 #pragma warning restore 612, 618
         }

@@ -10,8 +10,8 @@ using TamagotchiAPI.Models;
 namespace TamagotchiAPI.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210506222700_AddLastInteractedWithDate")]
-    partial class AddLastInteractedWithDate
+    [Migration("20210507121046_AddPlaytimeFeedingScolding")]
+    partial class AddPlaytimeFeedingScolding
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -111,7 +111,7 @@ namespace TamagotchiAPI.Migrations
             modelBuilder.Entity("TamagotchiAPI.Models.Feeding", b =>
                 {
                     b.HasOne("TamagotchiAPI.Models.Pet", "pet")
-                        .WithMany("PetFeedings")
+                        .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -122,7 +122,7 @@ namespace TamagotchiAPI.Migrations
             modelBuilder.Entity("TamagotchiAPI.Models.Playtime", b =>
                 {
                     b.HasOne("TamagotchiAPI.Models.Pet", "pet")
-                        .WithMany("PetPlaytimes")
+                        .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -133,21 +133,12 @@ namespace TamagotchiAPI.Migrations
             modelBuilder.Entity("TamagotchiAPI.Models.Scolding", b =>
                 {
                     b.HasOne("TamagotchiAPI.Models.Pet", "pet")
-                        .WithMany("PetScoldings")
+                        .WithMany()
                         .HasForeignKey("PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("pet");
-                });
-
-            modelBuilder.Entity("TamagotchiAPI.Models.Pet", b =>
-                {
-                    b.Navigation("PetFeedings");
-
-                    b.Navigation("PetPlaytimes");
-
-                    b.Navigation("PetScoldings");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace TamagotchiAPI.Migrations
 {
-    public partial class AddScoldingsFeedingsAndPlaytimes : Migration
+    public partial class AddPlaytimeFeedingScolding : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

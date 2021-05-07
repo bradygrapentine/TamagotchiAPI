@@ -41,9 +41,18 @@ namespace TamagotchiAPI.Controllers
         {
             // Uses the database context in `_context` to request all of the Pets, sort
             // them by row id and return them as a JSON array.
-            return await _context.Pets.Where(pet => pet.IsDead == false).OrderBy(row => row.Id).ToListAsync();
+            // var petList = Where(pet => pet.IsDead == false);
+            return await _context.Pets.OrderBy(row => row.Id).ToListAsync();
         }
-
+        // GET: api/Pets/Graveyard
+        // [HttpGet("{Graveyard}")]
+        // public async Task<ActionResult<IEnumerable<Pet>>> GetDeadPets()
+        // {
+        //     // Uses the database context in `_context` to request all of the Pets, sort
+        //     // them by row id and return them as a JSON array.
+        //     var petList = _context.Pets.Where(pet => pet.IsDead == true);
+        //     return await petList.OrderBy(row => row.Id).ToListAsync();
+        // }
         // GET: api/Pets/5
         //
         // Fetches and returns a specific pet by finding it by id. The id is specified in the
@@ -182,12 +191,26 @@ namespace TamagotchiAPI.Controllers
             var pet = await _context.Pets.FindAsync(id);
 
             // If the game doesn't exist: return a 404 Not found.
-            if (pet == null)
+            if (pet == null || pet.IsDead == true)
             {
                 // Return a `404` response to the client indicating we could not find a game night with this id
                 return NotFound();
             }
+            else if (pet.HungerLevel >= 13)
+            {
+                newPlaytime.PetId = pet.Id;
+                newPlaytime.When = DateTime.Now;
+                pet.HappinessLevel = 0;
+                pet.HungerLevel = 0;
+                pet.LastInteractedWithDate = DateTime.Now.AddDays(4);
 
+                // Add the player to the database
+                _context.Playtimes.Add(newPlaytime);
+                await _context.SaveChangesAsync();
+
+                // Return the new player to the response of the API
+                return Ok(newPlaytime);
+            }
             // Associate the player to the given game night.
             newPlaytime.PetId = pet.Id;
             newPlaytime.When = DateTime.Now;
@@ -213,7 +236,7 @@ namespace TamagotchiAPI.Controllers
             var pet = await _context.Pets.FindAsync(id);
 
             // If the game doesn't exist: return a 404 Not found.
-            if (pet == null)
+            if (pet == null || pet.IsDead == true)
             {
                 // Return a `404` response to the client indicating we could not find a game night with this id
                 return NotFound();
@@ -223,7 +246,14 @@ namespace TamagotchiAPI.Controllers
             newFeeding.PetId = pet.Id;
             newFeeding.When = DateTime.Now;
             pet.HappinessLevel += 3;
-            pet.HungerLevel -= 5;
+            if (pet.HungerLevel > 5)
+            {
+                pet.HungerLevel -= 5;
+            }
+            else
+            {
+                pet.HungerLevel = 0;
+            }
             pet.LastInteractedWithDate = DateTime.Now;
 
             // Add the player to the database
@@ -244,13 +274,14 @@ namespace TamagotchiAPI.Controllers
             var pet = await _context.Pets.FindAsync(id);
 
             // If the game doesn't exist: return a 404 Not found.
-            if (pet == null)
+            if (pet == null || pet.IsDead == true)
             {
                 // Return a `404` response to the client indicating we could not find a game night with this id
                 return NotFound();
             }
 
             // Associate the player to the given game night.
+
             newScolding.PetId = pet.Id;
             newScolding.When = DateTime.Now;
             pet.HappinessLevel -= 5;
