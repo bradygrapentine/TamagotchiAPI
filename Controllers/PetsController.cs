@@ -36,30 +36,33 @@ namespace TamagotchiAPI.Controllers
         //
         // Returns a list of all your Pets
         //
-        [HttpGet]
+        [HttpGet("VirtualZoo")]
         public async Task<ActionResult<IEnumerable<Pet>>> GetPets()
         {
             // Uses the database context in `_context` to request all of the Pets, sort
             // them by row id and return them as a JSON array.
-            // var petList = Where(pet => pet.IsDead == false);
-            return await _context.Pets.OrderBy(row => row.Id).ToListAsync();
+            // var petList = _context.Pets.Where(pet => pet.IsDead == false);
+            var allPets = await _context.Pets.OrderBy(row => row.Id).ToListAsync();
+            List<Pet> allDeadPets = allPets.Where(pet => pet.IsDead == false).ToList();
+            return allDeadPets;
         }
         // GET: api/Pets/Graveyard
-        // [HttpGet("{Graveyard}")]
-        // public async Task<ActionResult<IEnumerable<Pet>>> GetDeadPets()
-        // {
-        //     // Uses the database context in `_context` to request all of the Pets, sort
-        //     // them by row id and return them as a JSON array.
-        //     var petList = _context.Pets.Where(pet => pet.IsDead == true);
-        //     return await petList.OrderBy(row => row.Id).ToListAsync();
-        // }
-        // GET: api/Pets/5
+        [HttpGet("VirtualGraveyard")]
+        public async Task<ActionResult<IEnumerable<Pet>>> GetDeadPets()
+        {
+            // Uses the database context in `_context` to request all of the Pets, sort
+            // them by row id and return them as a JSON array.
+            var allPets = await _context.Pets.OrderBy(row => row.Id).ToListAsync();
+            List<Pet> allDeadPets = allPets.Where(pet => pet.IsDead == true).ToList();
+            return allDeadPets;
+        }
+        // // GET: api/Pets/5
         //
         // Fetches and returns a specific pet by finding it by id. The id is specified in the
         // URL. In the sample URL above it is the `5`.  The "{id}" in the [HttpGet("{id}")] is what tells dotnet
         // to grab the id from the URL. It is then made available to us as the `id` argument to the method.
         //
-        [HttpGet("{id}")]
+        [HttpGet("select{id}")]
         public async Task<ActionResult<Pet>> GetPet(int id)
         {
             // Find the pet in the database using `FindAsync` to look it up by id
@@ -196,21 +199,6 @@ namespace TamagotchiAPI.Controllers
                 // Return a `404` response to the client indicating we could not find a game night with this id
                 return NotFound();
             }
-            else if (pet.HungerLevel >= 13)
-            {
-                newPlaytime.PetId = pet.Id;
-                newPlaytime.When = DateTime.Now;
-                pet.HappinessLevel = 0;
-                pet.HungerLevel = 0;
-                pet.LastInteractedWithDate = DateTime.Now.AddDays(4);
-
-                // Add the player to the database
-                _context.Playtimes.Add(newPlaytime);
-                await _context.SaveChangesAsync();
-
-                // Return the new player to the response of the API
-                return Ok(newPlaytime);
-            }
             // Associate the player to the given game night.
             newPlaytime.PetId = pet.Id;
             newPlaytime.When = DateTime.Now;
@@ -279,7 +267,6 @@ namespace TamagotchiAPI.Controllers
                 // Return a `404` response to the client indicating we could not find a game night with this id
                 return NotFound();
             }
-
             // Associate the player to the given game night.
 
             newScolding.PetId = pet.Id;

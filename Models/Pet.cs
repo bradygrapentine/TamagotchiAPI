@@ -14,7 +14,7 @@ namespace TamagotchiAPI.Models
         {
             get
             {
-                if (LastInteractedWithDate.AddDays(3) <= DateTime.Now)
+                if (LastInteractedWithDate.AddDays(3) <= DateTime.Now || HungerLevel >= 15)
                 {
                     return true;
                 }
