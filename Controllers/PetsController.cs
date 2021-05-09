@@ -36,26 +36,33 @@ namespace TamagotchiAPI.Controllers
         //
         // Returns a list of all your Pets
         //
-        [HttpGet("VirtualZoo")]
-        public async Task<ActionResult<IEnumerable<Pet>>> GetPets()
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Pet>>> GetPets(bool graveyard)
         {
             // Uses the database context in `_context` to request all of the Pets, sort
             // them by row id and return them as a JSON array.
             // var petList = _context.Pets.Where(pet => pet.IsDead == false);
             var allPets = await _context.Pets.OrderBy(row => row.Id).ToListAsync();
-            List<Pet> allDeadPets = allPets.Where(pet => pet.IsDead == false).ToList();
-            return allDeadPets;
+            if (graveyard == true)
+            {
+                List<Pet> allDeadPets = allPets.Where(pet => pet.IsDead == true).ToList();
+                return allDeadPets;
+            }
+            else
+            {
+                List<Pet> allLivingPets = allPets.Where(pet => pet.IsDead == false).ToList();
+                return allLivingPets;
+            }
         }
-        // GET: api/Pets/Graveyard
-        [HttpGet("VirtualGraveyard")]
-        public async Task<ActionResult<IEnumerable<Pet>>> GetDeadPets()
-        {
-            // Uses the database context in `_context` to request all of the Pets, sort
-            // them by row id and return them as a JSON array.
-            var allPets = await _context.Pets.OrderBy(row => row.Id).ToListAsync();
-            List<Pet> allDeadPets = allPets.Where(pet => pet.IsDead == true).ToList();
-            return allDeadPets;
-        }
+        // [HttpGet]
+        // public async Task<ActionResult<IEnumerable<Pet>>> GetDeadPets()
+        // {
+        //     // Uses the database context in `_context` to request all of the Pets, sort
+        //     // them by row id and return them as a JSON array.
+        //     var allPets = await _context.Pets.OrderBy(row => row.Id).ToListAsync();
+        //     List<Pet> allDeadPets = allPets.Where(pet => pet.IsDead == true).ToList();
+        //     return allDeadPets;
+        // }
         // // GET: api/Pets/5
         //
         // Fetches and returns a specific pet by finding it by id. The id is specified in the
