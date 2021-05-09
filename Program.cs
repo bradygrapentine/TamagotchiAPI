@@ -5,14 +5,15 @@ using Microsoft.Extensions.Hosting;
 using TamagotchiAPI.Models;
 using TamagotchiAPI.Utils;
 
+
 namespace TamagotchiAPI
 {
     public class Program
     {
         public static async Task Main(string[] args)
         {
-            var host = Utilities.CreateWebHostBuilder(args).Build();
 
+            var host = Utilities.CreateWebHostBuilder(args).Build();
             using (var scope = host.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
@@ -25,10 +26,9 @@ namespace TamagotchiAPI
             }
 
             var task = host.RunAsync();
-
             Utilities.Notify("TamagotchiAPI Running!");
-
             WebHostExtensions.WaitForShutdown(host);
+
         }
     }
 }

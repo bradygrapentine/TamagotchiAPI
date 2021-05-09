@@ -69,7 +69,7 @@ namespace TamagotchiAPI.Controllers
         // URL. In the sample URL above it is the `5`.  The "{id}" in the [HttpGet("{id}")] is what tells dotnet
         // to grab the id from the URL. It is then made available to us as the `id` argument to the method.
         //
-        [HttpGet("select{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Pet>> GetPet(int id)
         {
             // Find the pet in the database using `FindAsync` to look it up by id
